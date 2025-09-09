@@ -12,3 +12,5 @@ uv.lock
 .python-version
 demo.txt
 .env
+/ingestion/sales_data_streaming
+/synthetic_data/__pycache__
