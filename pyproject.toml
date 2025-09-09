@@ -1,0 +1,24 @@
+[project]
+name = "inventory-optimization-forecasting"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "darts>=0.37.1",
+    "fastapi>=0.116.1",
+    "kafka-python>=2.2.15",
+    "minio>=7.2.16",
+    "mlflow>=3.3.2",
+    "pandas>=2.3.2",
+    "plotly>=6.3.0",
+    "prophet>=1.1.7",
+    "psycopg2-binary>=2.9.10",
+    "pyarrow>=21.0.0",
+    "python-dateutil>=2.9.0.post0",
+    "scikit-learn>=1.7.2",
+    "sqlalchemy>=2.0.43",
+    "streamlit>=1.49.1",
+    "uvicorn>=0.35.0",
+    "xgboost>=3.0.5",
+]
