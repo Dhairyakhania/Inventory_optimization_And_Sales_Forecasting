@@ -65,20 +65,45 @@ logger.info("Listening for sales events...")
 # ------------------------------------------------------------------------------
 # Consume messages and upload to MinIO
 # ------------------------------------------------------------------------------
+# for message in consumer:
+#     record = message.value
+#     file_name = f"sales_{datetime.utcnow().strftime('%Y%m%d%H%M%S%f')}.json"
+#     logger.info(f"Uploading record to MinIO: {file_name}")
+
+#     # Convert record to JSON bytes
+#     data_bytes = io.BytesIO(json.dumps(record).encode("utf-8"))
+
+#     # Upload to MinIO
+#     minio_client.put_object(
+#         bucket_name=MINIO_BUCKET,
+#         object_name=file_name,
+#         data=data_bytes,
+#         length=len(data_bytes.getvalue()),
+#         content_type="application/json",
+#     )
+#     logger.info(f"Successfully uploaded {file_name} to bucket {MINIO_BUCKET}")
+
+
 for message in consumer:
     record = message.value
-    file_name = f"sales_{datetime.utcnow().strftime('%Y%m%d%H%M%S%f')}.json"
-    logger.info(f"Uploading record to MinIO: {file_name}")
+    logger.info(f"Consumed: {record}")
 
-    # Convert record to JSON bytes
-    data_bytes = io.BytesIO(json.dumps(record).encode("utf-8"))
+    # Get event date (fallback to today if missing)
+    event_date = datetime.strptime(record.get("timestamp", datetime.now().strftime("%Y-%m-%d")), "%Y-%m-%d")
+    year, month, day = event_date.strftime("%Y"), event_date.strftime("%m"), event_date.strftime("%d")
 
-    # Upload to MinIO
+    # Build partitioned path
+    object_name = f"year={year}/month={month}/day={day}/sales_{datetime.now().strftime('%H%M%S%f')}.json"
+
+    # Save record to MinIO
+    record_bytes = json.dumps(record).encode("utf-8")
+    record_stream = io.BytesIO(record_bytes)
     minio_client.put_object(
         bucket_name=MINIO_BUCKET,
-        object_name=file_name,
-        data=data_bytes,
-        length=len(data_bytes.getvalue()),
-        content_type="application/json",
+        object_name=object_name,
+        data=record_stream,
+        length=len(record_bytes),
+        content_type="application/json"
     )
-    logger.info(f"Successfully uploaded {file_name} to bucket {MINIO_BUCKET}")
+
+    logger.info(f"Stored in MinIO: {MINIO_BUCKET}/{object_name}")
