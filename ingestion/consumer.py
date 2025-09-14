@@ -1,49 +1,84 @@
-# consumer_to_minio.py
+# consumer.py
 import os
 import json
 import logging
 from kafka import KafkaConsumer
-import boto3
-from botocore.exceptions import ClientError
-from dotenv import load_dotenv
+from minio import Minio
+from datetime import datetime
+import io
 
-load_dotenv()
 logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger("MinIOConsumer")
+logger = logging.getLogger("SalesConsumer")
 
-# Kafka consumer config
+# ------------------------------------------------------------------------------
+# Environment config
+# ------------------------------------------------------------------------------
+
+# Kafka settings
+KAFKA_BROKER = os.getenv("KAFKA_BROKER", "localhost:9092")
+KAFKA_TOPIC = os.getenv("KAFKA_TOPIC", "sales-events")
+
+# MinIO settings
+MINIO_ENDPOINT = os.getenv("MINIO_ENDPOINT", "localhost:9000")
+MINIO_ACCESS_KEY = os.getenv("MINIO_ROOT_USER", "minio")
+MINIO_SECRET_KEY = os.getenv("MINIO_ROOT_PASSWORD", "minio123")
+MINIO_BUCKET = os.getenv("MINIO_BUCKET_RAW", "sales-raw")
+
+# Auto-switch if running locally and MINIO_ENDPOINT points to container hostname
+if MINIO_ENDPOINT.startswith("minio:"):
+    # Default to localhost when running outside Docker
+    if os.getenv("RUN_LOCAL", "true").lower() == "true":
+        logger.info(f"Switching MinIO endpoint from {MINIO_ENDPOINT} → localhost:9000")
+        MINIO_ENDPOINT = "localhost:9000"
+
+# ------------------------------------------------------------------------------
+# Initialize MinIO client
+# ------------------------------------------------------------------------------
+minio_client = Minio(
+    MINIO_ENDPOINT,
+    access_key=MINIO_ACCESS_KEY,
+    secret_key=MINIO_SECRET_KEY,
+    secure=False,
+)
+
+# Ensure bucket exists
+if not minio_client.bucket_exists(MINIO_BUCKET):
+    minio_client.make_bucket(MINIO_BUCKET)
+    logger.info(f"Created bucket: {MINIO_BUCKET}")
+else:
+    logger.info(f"Bucket {MINIO_BUCKET} already exists")
+
+# ------------------------------------------------------------------------------
+# Kafka consumer setup
+# ------------------------------------------------------------------------------
 consumer = KafkaConsumer(
-    'sales-events',
-    bootstrap_servers='localhost:9092',
-    auto_offset_reset='earliest',
+    KAFKA_TOPIC,
+    bootstrap_servers=[KAFKA_BROKER],
+    value_deserializer=lambda m: json.loads(m.decode("utf-8")),
+    auto_offset_reset="earliest",
     enable_auto_commit=True,
-    value_deserializer=lambda x: json.loads(x.decode('utf-8'))
+    group_id="sales-consumer-group",
 )
 
-# MinIO config
-s3 = boto3.client(
-    's3',
-    endpoint_url=os.environ.get('MINIO_ENDPOINT'),
-    aws_access_key_id=os.environ.get('MINIO_ROOT_USER'),
-    aws_secret_access_key=os.environ.get('MINIO_ROOT_PASSWORD')
-)
-bucket_name = 'raw-sales-data'
+logger.info("Listening for sales events...")
 
-# Create bucket if it doesn't exist
-try:
-    s3.create_bucket(Bucket=bucket_name)
-except s3.exceptions.BucketAlreadyOwnedByYou:
-    pass
-
-logger.info("Consuming from Kafka and storing into MinIO...")
-
+# ------------------------------------------------------------------------------
+# Consume messages and upload to MinIO
+# ------------------------------------------------------------------------------
 for message in consumer:
     record = message.value
-    date_str = str(record['date']).split(" ")[0]
-    key = f"{date_str}/{record['store_id']}/{record['product_id']}.json"
+    file_name = f"sales_{datetime.utcnow().strftime('%Y%m%d%H%M%S%f')}.json"
+    logger.info(f"Uploading record to MinIO: {file_name}")
 
-    try:
-        s3.put_object(Bucket=bucket_name, Key=key, Body=json.dumps(record))
-        logger.info(f"Saved {key} to MinIO")
-    except ClientError as e:
-        logger.error(f"Failed to upload {key} to MinIO: {e}")
+    # Convert record to JSON bytes
+    data_bytes = io.BytesIO(json.dumps(record).encode("utf-8"))
+
+    # Upload to MinIO
+    minio_client.put_object(
+        bucket_name=MINIO_BUCKET,
+        object_name=file_name,
+        data=data_bytes,
+        length=len(data_bytes.getvalue()),
+        content_type="application/json",
+    )
+    logger.info(f"Successfully uploaded {file_name} to bucket {MINIO_BUCKET}")
