@@ -14,4 +14,4 @@ demo.txt
 .env
 /ingestion/sales_data_streaming
 /synthetic_data/__pycache__
-/ingestion/synthetic_output
+/ingestion/synthetic_data
