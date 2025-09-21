@@ -22,19 +22,40 @@
 
 -- Create schema for data warehouse
 -- CREATE DATABASE warehouse;
+-- CREATE SCHEMA IF NOT EXISTS warehouse;
+-- \c warehouse;
+
+-- CREATE TABLE IF NOT EXISTS warehouse.sales (
+--     id SERIAL PRIMARY KEY,
+--     date TIMESTAMP NOT NULL,
+--     store_id VARCHAR(50),
+--     product_id VARCHAR(50),
+--     category VARCHAR(100),
+--     quantity_sold INT,
+--     unit_price NUMERIC(10,2),
+--     discount_percent NUMERIC(5,2),
+--     revenue NUMERIC(12,2),
+--     cost NUMERIC(12,2),
+--     profit NUMERIC(12,2)
+-- );
+
 CREATE SCHEMA IF NOT EXISTS warehouse;
-\c warehouse;
 
 CREATE TABLE IF NOT EXISTS warehouse.sales (
     id SERIAL PRIMARY KEY,
     date TIMESTAMP NOT NULL,
-    store_id VARCHAR(50),
-    product_id VARCHAR(50),
+    store_id VARCHAR(50) NOT NULL,
+    product_id VARCHAR(50) NOT NULL,
     category VARCHAR(100),
     quantity_sold INT,
     unit_price NUMERIC(10,2),
     discount_percent NUMERIC(5,2),
     revenue NUMERIC(12,2),
     cost NUMERIC(12,2),
-    profit NUMERIC(12,2)
+    profit NUMERIC(12,2),
+    CONSTRAINT unique_sale UNIQUE (date, store_id, product_id),
+    month INT,
+    year INT
 );
+
+
