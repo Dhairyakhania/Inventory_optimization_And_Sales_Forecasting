@@ -9,6 +9,7 @@ dependencies = [
     "darts>=0.37.1",
     "dotenv>=0.9.9",
     "fastapi>=0.116.1",
+    "grafanalib>=0.7.1",
     "kafka-python>=2.2.15",
     "minio>=7.2.16",
     "mlflow>=3.3.2",

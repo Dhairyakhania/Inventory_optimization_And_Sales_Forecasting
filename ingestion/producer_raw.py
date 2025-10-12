@@ -26,7 +26,7 @@ def json_serializer(obj):
 def main():
     # Step 1 — Generate synthetic Parquet files
     data_gen = RealisticSalesDataGenerator(
-        start_date="2023-01-01",
+        start_date="2021-01-01",
         end_date="2025-01-07"
     )
     file_paths = data_gen.generate_sales_data(output_dir=OUTPUT_DIR)

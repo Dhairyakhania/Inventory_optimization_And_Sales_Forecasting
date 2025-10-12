@@ -1,0 +1,15 @@
+apiVersion: 1
+
+datasources:
+  - name: ForecastPostgres
+    type: postgres
+    access: proxy
+    url: postgres:5432         # Service name of Postgres container
+    database: warehouse        # Your DB name
+    user: ${POSTGRES_USER}     # Use env variables
+    password: ${POSTGRES_PASSWORD}
+    isDefault: true
+    sslmode: disable
+    jsonData:
+      postgresVersion: 16
+      tlsMode: "disable"
