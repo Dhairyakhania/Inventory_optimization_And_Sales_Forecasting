@@ -13,7 +13,7 @@
   "panels": [
     {
       "cacheTimeout": null,
-      "datasource": "PostgreSQL",
+      "datasource": "ForecastPostgres",
       "description": null,
       "editable": true,
       "error": false,
@@ -58,7 +58,7 @@
           "step": 10,
           "instant": false,
           "datasource": null,
-          "rawSql": "\n                        SELECT\n                            date AS \"time\",\n                            forecast AS value\n                        FROM warehouse.forecast_results\n                        WHERE store_id = $store_id\n                          AND product_id = $product_id\n                        ORDER BY date\n                    ",
+          "rawSql": "\n                        SELECT\n                            $__time(date),\n                            store_id || ' - ' || product_id AS metric,\n                            AVG(forecast) AS value\n                        FROM warehouse.forecast_results\n                        WHERE\n                            ('$store_id' = 'All' OR store_id = ANY(string_to_array('$store_id', ',')))\n                            AND ('$product_id' = 'All' OR product_id = ANY(string_to_array('$product_id', ',')))\n                        GROUP BY 1, 2\n                        ORDER BY 1\n                    ",
           "rawQuery": true
         }
       ],
@@ -148,7 +148,7 @@
     },
     {
       "cacheTimeout": null,
-      "datasource": "PostgreSQL",
+      "datasource": "ForecastPostgres",
       "description": null,
       "editable": true,
       "error": false,
@@ -193,7 +193,7 @@
           "step": 10,
           "instant": false,
           "datasource": null,
-          "rawSql": "\n                        SELECT\n                            date AS \"time\",\n                            safety_stock AS value\n                        FROM warehouse.forecast_results\n                        WHERE store_id = $store_id\n                          AND product_id = $product_id\n                        ORDER BY date\n                    ",
+          "rawSql": "\n                        SELECT\n                            $__time(date),\n                            store_id || ' - ' || product_id AS metric,\n                            AVG(safety_stock) AS value\n                        FROM warehouse.forecast_results\n                        WHERE\n                            ('$store_id' = 'All' OR store_id = ANY(string_to_array('$store_id', ',')))\n                            AND ('$product_id' = 'All' OR product_id = ANY(string_to_array('$product_id', ',')))\n                        GROUP BY 1, 2\n                        ORDER BY 1\n                    ",
           "rawQuery": true
         }
       ],
@@ -283,7 +283,7 @@
     },
     {
       "cacheTimeout": null,
-      "datasource": "PostgreSQL",
+      "datasource": "ForecastPostgres",
       "description": null,
       "editable": true,
       "error": false,
@@ -328,7 +328,7 @@
           "step": 10,
           "instant": false,
           "datasource": null,
-          "rawSql": "\n                        SELECT\n                            date AS \"time\",\n                            reorder_quantity AS value\n                        FROM warehouse.forecast_results\n                        WHERE store_id = $store_id\n                          AND product_id = $product_id\n                        ORDER BY date\n                    ",
+          "rawSql": "\n                        SELECT\n                            $__time(date),\n                            store_id || ' - ' || product_id AS metric,\n                            AVG(reorder_quantity) AS value\n                        FROM warehouse.forecast_results\n                        WHERE\n                            ('$store_id' = 'All' OR store_id = ANY(string_to_array('$store_id', ',')))\n                            AND ('$product_id' = 'All' OR product_id = ANY(string_to_array('$product_id', ',')))\n                        GROUP BY 1, 2\n                        ORDER BY 1\n                    ",
           "rawQuery": true
         }
       ],
@@ -426,7 +426,7 @@
   "templating": {
     "list": [
       {
-        "allValue": null,
+        "allValue": "All",
         "current": {
           "selected": false,
           "text": null,
@@ -453,7 +453,7 @@
         "auto_count": 30
       },
       {
-        "allValue": null,
+        "allValue": "All",
         "current": {
           "selected": false,
           "text": null,
@@ -483,7 +483,7 @@
   },
   "title": "Forecast Results Dashboard - All Stores",
   "time": {
-    "from": "now-90d",
+    "from": "now-2y",
     "to": "now"
   },
   "timepicker": {

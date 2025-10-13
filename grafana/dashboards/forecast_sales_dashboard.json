@@ -1,0 +1,871 @@
+{
+  "__inputs": [],
+  "annotations": {
+    "list": []
+  },
+  "description": "",
+  "editable": true,
+  "gnetId": null,
+  "graphTooltip": 0,
+  "hideControls": false,
+  "id": null,
+  "links": [],
+  "panels": [
+    {
+      "cacheTimeout": null,
+      "datasource": "ForecastPostgres",
+      "description": null,
+      "editable": true,
+      "error": false,
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": []
+          },
+          "unit": ""
+        }
+      },
+      "height": null,
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "hideTimeOverride": false,
+      "id": 1,
+      "interval": null,
+      "links": [],
+      "maxDataPoints": 100,
+      "minSpan": null,
+      "repeat": null,
+      "repeatDirection": null,
+      "maxPerRow": null,
+      "span": null,
+      "targets": [
+        {
+          "expr": "",
+          "query": "",
+          "target": "",
+          "format": "time_series",
+          "hide": false,
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "",
+          "metric": "",
+          "refId": "A0",
+          "step": 10,
+          "instant": false,
+          "datasource": null,
+          "rawSql": "\n                        SELECT\n                            $__time(date),\n                            store_id || ' - ' || product_id AS metric,\n                            AVG(forecast) AS value\n                        FROM warehouse.forecast_results\n                        WHERE\n                            ('$store_id' = 'All' OR store_id = ANY(string_to_array('$store_id', ',')))\n                            AND ('$product_id' = 'All' OR product_id = ANY(string_to_array('$product_id', ',')))\n                        GROUP BY 1,2\n                        ORDER BY 1\n                    ",
+          "rawQuery": true
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Forecast Over Time",
+      "transparent": false,
+      "transformations": [],
+      "aliasColors": {},
+      "bars": false,
+      "fill": 1,
+      "grid": {
+        "threshold1": null,
+        "threshold1Color": "rgba(216, 200, 27, 0.27)",
+        "threshold2": null,
+        "threshold2Color": "rgba(234, 112, 112, 0.22)"
+      },
+      "isNew": true,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false,
+        "alignAsTable": false,
+        "hideEmpty": false,
+        "hideZero": false,
+        "rightSide": false,
+        "sideWidth": null,
+        "sort": null,
+        "sortDesc": false
+      },
+      "lines": true,
+      "linewidth": 2,
+      "nullPointMode": "connected",
+      "options": {
+        "dataLinks": [],
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pointradius": 5,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "stack": false,
+      "steppedLine": false,
+      "tooltip": {
+        "msResolution": true,
+        "shared": true,
+        "sort": 0,
+        "value_type": "cumulative"
+      },
+      "thresholds": [],
+      "type": "graph",
+      "xaxis": {
+        "mode": "time",
+        "name": null,
+        "values": [],
+        "show": true
+      },
+      "yaxes": [
+        {
+          "decimals": null,
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "decimals": null,
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": 0
+      }
+    },
+    {
+      "cacheTimeout": null,
+      "datasource": "ForecastPostgres",
+      "description": null,
+      "editable": true,
+      "error": false,
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": []
+          },
+          "unit": ""
+        }
+      },
+      "height": null,
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 8
+      },
+      "hideTimeOverride": false,
+      "id": 2,
+      "interval": null,
+      "links": [],
+      "maxDataPoints": 100,
+      "minSpan": null,
+      "repeat": null,
+      "repeatDirection": null,
+      "maxPerRow": null,
+      "span": null,
+      "targets": [
+        {
+          "expr": "",
+          "query": "",
+          "target": "",
+          "format": "time_series",
+          "hide": false,
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "",
+          "metric": "",
+          "refId": "A1",
+          "step": 10,
+          "instant": false,
+          "datasource": null,
+          "rawSql": "\n                        SELECT\n                            $__time(date),\n                            store_id || ' - ' || product_id AS metric,\n                            AVG(safety_stock) AS value\n                        FROM warehouse.forecast_results\n                        WHERE\n                            ('$store_id' = 'All' OR store_id = ANY(string_to_array('$store_id', ',')))\n                            AND ('$product_id' = 'All' OR product_id = ANY(string_to_array('$product_id', ',')))\n                        GROUP BY 1,2\n                        ORDER BY 1\n                    ",
+          "rawQuery": true
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Safety Stock Over Time",
+      "transparent": false,
+      "transformations": [],
+      "aliasColors": {},
+      "bars": false,
+      "fill": 1,
+      "grid": {
+        "threshold1": null,
+        "threshold1Color": "rgba(216, 200, 27, 0.27)",
+        "threshold2": null,
+        "threshold2Color": "rgba(234, 112, 112, 0.22)"
+      },
+      "isNew": true,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false,
+        "alignAsTable": false,
+        "hideEmpty": false,
+        "hideZero": false,
+        "rightSide": false,
+        "sideWidth": null,
+        "sort": null,
+        "sortDesc": false
+      },
+      "lines": true,
+      "linewidth": 2,
+      "nullPointMode": "connected",
+      "options": {
+        "dataLinks": [],
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pointradius": 5,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "stack": false,
+      "steppedLine": false,
+      "tooltip": {
+        "msResolution": true,
+        "shared": true,
+        "sort": 0,
+        "value_type": "cumulative"
+      },
+      "thresholds": [],
+      "type": "graph",
+      "xaxis": {
+        "mode": "time",
+        "name": null,
+        "values": [],
+        "show": true
+      },
+      "yaxes": [
+        {
+          "decimals": null,
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "decimals": null,
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": 0
+      }
+    },
+    {
+      "cacheTimeout": null,
+      "datasource": "ForecastPostgres",
+      "description": null,
+      "editable": true,
+      "error": false,
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": []
+          },
+          "unit": ""
+        }
+      },
+      "height": null,
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 16
+      },
+      "hideTimeOverride": false,
+      "id": 3,
+      "interval": null,
+      "links": [],
+      "maxDataPoints": 100,
+      "minSpan": null,
+      "repeat": null,
+      "repeatDirection": null,
+      "maxPerRow": null,
+      "span": null,
+      "targets": [
+        {
+          "expr": "",
+          "query": "",
+          "target": "",
+          "format": "time_series",
+          "hide": false,
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "",
+          "metric": "",
+          "refId": "A2",
+          "step": 10,
+          "instant": false,
+          "datasource": null,
+          "rawSql": "\n                        SELECT\n                            $__time(date),\n                            store_id || ' - ' || product_id AS metric,\n                            AVG(reorder_quantity) AS value\n                        FROM warehouse.forecast_results\n                        WHERE\n                            ('$store_id' = 'All' OR store_id = ANY(string_to_array('$store_id', ',')))\n                            AND ('$product_id' = 'All' OR product_id = ANY(string_to_array('$product_id', ',')))\n                        GROUP BY 1,2\n                        ORDER BY 1\n                    ",
+          "rawQuery": true
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Reorder Quantity Over Time",
+      "transparent": false,
+      "transformations": [],
+      "aliasColors": {},
+      "bars": false,
+      "fill": 1,
+      "grid": {
+        "threshold1": null,
+        "threshold1Color": "rgba(216, 200, 27, 0.27)",
+        "threshold2": null,
+        "threshold2Color": "rgba(234, 112, 112, 0.22)"
+      },
+      "isNew": true,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false,
+        "alignAsTable": false,
+        "hideEmpty": false,
+        "hideZero": false,
+        "rightSide": false,
+        "sideWidth": null,
+        "sort": null,
+        "sortDesc": false
+      },
+      "lines": true,
+      "linewidth": 2,
+      "nullPointMode": "connected",
+      "options": {
+        "dataLinks": [],
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pointradius": 5,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "stack": false,
+      "steppedLine": false,
+      "tooltip": {
+        "msResolution": true,
+        "shared": true,
+        "sort": 0,
+        "value_type": "cumulative"
+      },
+      "thresholds": [],
+      "type": "graph",
+      "xaxis": {
+        "mode": "time",
+        "name": null,
+        "values": [],
+        "show": true
+      },
+      "yaxes": [
+        {
+          "decimals": null,
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "decimals": null,
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": 0
+      }
+    },
+    {
+      "cacheTimeout": null,
+      "datasource": "ForecastPostgres",
+      "description": null,
+      "editable": true,
+      "error": false,
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": []
+          },
+          "unit": ""
+        }
+      },
+      "height": null,
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 24
+      },
+      "hideTimeOverride": false,
+      "id": 4,
+      "interval": null,
+      "links": [],
+      "maxDataPoints": 100,
+      "minSpan": null,
+      "repeat": null,
+      "repeatDirection": null,
+      "maxPerRow": null,
+      "span": null,
+      "targets": [
+        {
+          "expr": "",
+          "query": "",
+          "target": "",
+          "format": "time_series",
+          "hide": false,
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "",
+          "metric": "",
+          "refId": "R1",
+          "step": 10,
+          "instant": false,
+          "datasource": null,
+          "rawSql": "\n                    SELECT\n                        $__time_trunc(order_date,'month') AS time,\n                        store_id AS metric,\n                        SUM(revenue) AS value\n                    FROM sales_table\n                    WHERE\n                        ('$store_id' = 'All' OR store_id = ANY(string_to_array('$store_id', ',')))\n                    GROUP BY 1,2\n                    ORDER BY 1\n                ",
+          "rawQuery": true
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Monthly Revenue by Store",
+      "transparent": false,
+      "transformations": [],
+      "aliasColors": {},
+      "bars": false,
+      "fill": 1,
+      "grid": {
+        "threshold1": null,
+        "threshold1Color": "rgba(216, 200, 27, 0.27)",
+        "threshold2": null,
+        "threshold2Color": "rgba(234, 112, 112, 0.22)"
+      },
+      "isNew": true,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false,
+        "alignAsTable": false,
+        "hideEmpty": false,
+        "hideZero": false,
+        "rightSide": false,
+        "sideWidth": null,
+        "sort": null,
+        "sortDesc": false
+      },
+      "lines": true,
+      "linewidth": 2,
+      "nullPointMode": "connected",
+      "options": {
+        "dataLinks": [],
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pointradius": 5,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "stack": false,
+      "steppedLine": false,
+      "tooltip": {
+        "msResolution": true,
+        "shared": true,
+        "sort": 0,
+        "value_type": "cumulative"
+      },
+      "thresholds": [],
+      "type": "graph",
+      "xaxis": {
+        "mode": "time",
+        "name": null,
+        "values": [],
+        "show": true
+      },
+      "yaxes": [
+        {
+          "decimals": null,
+          "format": "currency",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "decimals": null,
+          "format": "currency",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": 0
+      }
+    },
+    {
+      "cacheTimeout": null,
+      "datasource": "ForecastPostgres",
+      "description": null,
+      "editable": true,
+      "error": false,
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": []
+          },
+          "custom": {
+            "align": "auto",
+            "displayMode": "auto",
+            "filterable": false
+          },
+          "unit": ""
+        },
+        "overrides": []
+      },
+      "height": null,
+      "gridPos": {
+        "h": 6,
+        "w": 24,
+        "x": 0,
+        "y": 32
+      },
+      "hideTimeOverride": false,
+      "id": 5,
+      "interval": null,
+      "links": [],
+      "maxDataPoints": 100,
+      "minSpan": null,
+      "repeat": null,
+      "repeatDirection": null,
+      "maxPerRow": null,
+      "span": null,
+      "targets": [
+        {
+          "expr": "",
+          "query": "",
+          "target": "",
+          "format": "time_series",
+          "hide": false,
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "",
+          "metric": "",
+          "refId": "R2",
+          "step": 10,
+          "instant": false,
+          "datasource": null,
+          "rawSql": "\n                    SELECT\n                        product_id AS metric,\n                        SUM(revenue) AS value\n                    FROM sales_table\n                    WHERE\n                        ('$product_id' = 'All' OR product_id = ANY(string_to_array('$product_id', ',')))\n                    GROUP BY 1\n                    ORDER BY 2 DESC\n                    LIMIT 10\n                ",
+          "rawQuery": true
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Top Products by Revenue",
+      "transparent": false,
+      "transformations": [],
+      "color": {
+        "mode": "thresholds"
+      },
+      "columns": [],
+      "fontSize": "100%",
+      "mappings": [],
+      "options": {
+        "showHeader": true,
+        "sortBy": []
+      },
+      "type": "table"
+    },
+    {
+      "cacheTimeout": null,
+      "datasource": "ForecastPostgres",
+      "description": null,
+      "editable": true,
+      "error": false,
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": ""
+          },
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "height": null,
+      "gridPos": {
+        "h": 6,
+        "w": 24,
+        "x": 0,
+        "y": 38
+      },
+      "hideTimeOverride": false,
+      "id": 6,
+      "interval": null,
+      "links": [],
+      "maxDataPoints": 100,
+      "minSpan": null,
+      "repeat": null,
+      "repeatDirection": null,
+      "maxPerRow": null,
+      "span": null,
+      "targets": [
+        {
+          "expr": "",
+          "query": "",
+          "target": "",
+          "format": "time_series",
+          "hide": false,
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "",
+          "metric": "",
+          "refId": "R3",
+          "step": 10,
+          "instant": false,
+          "datasource": null,
+          "rawSql": "\n                    SELECT\n                        product_id AS metric,\n                        SUM(revenue) AS value\n                    FROM sales_table\n                    WHERE\n                        ('$product_id' = 'All' OR product_id = ANY(string_to_array('$product_id', ',')))\n                    GROUP BY 1\n                ",
+          "rawQuery": true
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Revenue Share by Product",
+      "transparent": false,
+      "transformations": [],
+      "aliasColors": {},
+      "format": "none",
+      "pieType": "pie",
+      "legend": {
+        "show": true,
+        "values": true,
+        "percentage": false,
+        "percentageDecimals": 0
+      },
+      "legendType": "Right side",
+      "type": "grafana-piechart-panel"
+    },
+    {
+      "cacheTimeout": null,
+      "datasource": "ForecastPostgres",
+      "description": null,
+      "editable": true,
+      "error": false,
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": []
+          },
+          "custom": {
+            "align": "auto",
+            "displayMode": "auto",
+            "filterable": false
+          },
+          "unit": ""
+        },
+        "overrides": []
+      },
+      "height": null,
+      "gridPos": {
+        "h": 6,
+        "w": 24,
+        "x": 0,
+        "y": 44
+      },
+      "hideTimeOverride": false,
+      "id": 7,
+      "interval": null,
+      "links": [],
+      "maxDataPoints": 100,
+      "minSpan": null,
+      "repeat": null,
+      "repeatDirection": null,
+      "maxPerRow": null,
+      "span": null,
+      "targets": [
+        {
+          "expr": "",
+          "query": "",
+          "target": "",
+          "format": "time_series",
+          "hide": false,
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "",
+          "metric": "",
+          "refId": "R4",
+          "step": 10,
+          "instant": false,
+          "datasource": null,
+          "rawSql": "\n                    SELECT\n                        product_id AS metric,\n                        SUM(revenue) AS revenue,\n                        SUM(profit) AS profit\n                    FROM sales_table\n                    WHERE\n                        ('$product_id' = 'All' OR product_id = ANY(string_to_array('$product_id', ',')))\n                    GROUP BY 1\n                ",
+          "rawQuery": true
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Profit vs Revenue per Product",
+      "transparent": false,
+      "transformations": [],
+      "color": {
+        "mode": "thresholds"
+      },
+      "columns": [],
+      "fontSize": "100%",
+      "mappings": [],
+      "options": {
+        "showHeader": true,
+        "sortBy": []
+      },
+      "type": "table"
+    }
+  ],
+  "refresh": "10s",
+  "rows": [],
+  "schemaVersion": 12,
+  "sharedCrosshair": false,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "allValue": "All",
+        "current": {
+          "selected": false,
+          "text": null,
+          "value": null,
+          "tags": []
+        },
+        "datasource": null,
+        "hide": 0,
+        "includeAll": true,
+        "label": "Store",
+        "multi": true,
+        "name": "store_id",
+        "options": [],
+        "query": "SELECT DISTINCT store_id FROM warehouse.forecast_results ORDER BY store_id",
+        "refresh": 1,
+        "regex": null,
+        "sort": 1,
+        "type": "query",
+        "useTags": false,
+        "tagsQuery": null,
+        "tagValuesQuery": null,
+        "auto": false,
+        "auto_min": "10s",
+        "auto_count": 30
+      },
+      {
+        "allValue": "All",
+        "current": {
+          "selected": false,
+          "text": null,
+          "value": null,
+          "tags": []
+        },
+        "datasource": null,
+        "hide": 0,
+        "includeAll": true,
+        "label": "Product",
+        "multi": true,
+        "name": "product_id",
+        "options": [],
+        "query": "SELECT DISTINCT product_id FROM warehouse.forecast_results ORDER BY product_id",
+        "refresh": 1,
+        "regex": null,
+        "sort": 1,
+        "type": "query",
+        "useTags": false,
+        "tagsQuery": null,
+        "tagValuesQuery": null,
+        "auto": false,
+        "auto_min": "10s",
+        "auto_count": 30
+      }
+    ]
+  },
+  "title": "Forecast and Sales Dashboard",
+  "time": {
+    "from": "now-1y",
+    "to": "now"
+  },
+  "timepicker": {
+    "refresh_intervals": [
+      "5s",
+      "10s",
+      "30s",
+      "1m",
+      "5m",
+      "15m",
+      "30m",
+      "1h",
+      "2h",
+      "1d"
+    ],
+    "time_options": [
+      "5m",
+      "15m",
+      "1h",
+      "6h",
+      "12h",
+      "24h",
+      "2d",
+      "7d",
+      "30d"
+    ],
+    "nowDelay": null,
+    "hidden": false
+  },
+  "timezone": "utc",
+  "version": 0,
+  "uid": null
+}

@@ -135,6 +135,8 @@ def load_to_postgres(df, table_name, schema_name):
         conn.execute(text(f"ALTER TABLE {schema_name}.{table_name} ADD COLUMN IF NOT EXISTS year INT;"))
         conn.execute(text(f"ALTER TABLE {schema_name}.{table_name} ADD COLUMN IF NOT EXISTS profit_margin NUMERIC(12,4);"))
 
+        df = df.drop_duplicates(subset=["date", "store_id", "product_id"], keep="last")
+
         # Build insert query with ON CONFLICT
         cols = df.columns.tolist()
         columns = ",".join(cols)
