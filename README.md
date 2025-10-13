@@ -44,12 +44,6 @@ The project consists of six main layers:
 +------------------+                                      |
                                                           v
                                                      +----------+
-                                                     |  ETL     |
-                                                     | (Airflow)|
-                                                     +----------+
-                                                          |
-                                                          v
-                                                     +----------+
                                                      |Warehouse |
                                                      |PostgreSQL|
                                                      +----------+
@@ -58,12 +52,6 @@ The project consists of six main layers:
                                                   +---------------+
                                                   | Modeling Layer|
                                                   | (Prophet/XGB)|
-                                                  +---------------+
-                                                          |
-                                                          v
-                                                  +---------------+
-                                                  | Serving Layer |
-                                                  |   (FastAPI)   |
                                                   +---------------+
                                                           |
                                                           v
@@ -85,7 +73,7 @@ docker-compose up -d
 - Kafka + Zookeeper
 - MinIO (Data Lake)
 - PostgreSQL (Data Warehouse)
-- Optional: MLflow, Grafana
+- Optional: Grafana, streamlit
 
 Verify that all services are running:
 
@@ -124,11 +112,9 @@ raw → staging → PostgreSQL warehouse
 
 ## Modeling Layer
 
-**Sales Forecasting**: Prophet, Darts, or XGBoost models
+**Sales Forecasting**: Prophet, Ets, or XGBoost models
 
 **Inventory Optimization**: Compute safety stock, reorder point, and recommended order quantity
-
-**Tracking**: Models and metrics stored in MLflow
 
 ## Visualization Layer
 
