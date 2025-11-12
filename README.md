@@ -27,7 +27,7 @@ The project consists of six main layers:
 
 1. **Infrastructure**: Docker Compose setup with Kafka, Zookeeper, MinIO, PostgreSQL, and optional MLflow & Grafana.  
 2. **Ingestion Layer**: Producers generate simulated sales and inventory events → Kafka → Consumer writes JSON batches into MinIO raw zone.  
-3. **ETL Layer**: Raw JSON → cleaned Parquet → staged → loaded into PostgreSQL warehouse. Automated via Airflow DAGs.  
+3. **ETL Layer**: Raw JSON → cleaned Parquet → staged → loaded into PostgreSQL warehouse.  
 4. **Modeling Layer**: Forecast sales using Prophet/Darts/XGBoost. Inventory optimization includes safety stock and reorder points. Metrics and models tracked in MLflow.  
 5. **Serving Layer**: FastAPI endpoints for forecasts and reorder recommendations.  
 6. **Visualization Layer**: Streamlit dashboard for historical sales, forecasts, stock levels, and reorder recommendations. Optional Apache Superset dashboards for BI-style analytics.
