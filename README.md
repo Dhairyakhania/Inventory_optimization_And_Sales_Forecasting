@@ -123,3 +123,6 @@ raw → staging → PostgreSQL warehouse
 - Interactive Plotly charts for historical sales and forecasts
 - Current stock levels from warehouse
 - Recommended reorder points
+
+## 📄 License
+This project is licensed under the [License](LICENSE).
